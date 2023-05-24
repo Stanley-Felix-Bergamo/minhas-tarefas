@@ -10,7 +10,7 @@ const ListaDeTarefas = () => {
     (state: RootReducer) => state.filtro
   )
 
-  const filtrarTrefas = () => {
+  const filtrarTarefas = () => {
     let tarefasFiltradas = itens
     if (termo !== undefined) {
       tarefasFiltradas = tarefasFiltradas.filter(
@@ -31,19 +31,26 @@ const ListaDeTarefas = () => {
       return itens
     }
   }
+  const exibeResultadoDaFiltragem = (quantidade: number) => {
+    let msg = ''
+    const complementacao =
+      termo !== undefined && termo.length > 0 ? `e"${termo}"` : ''
+
+    if (criterio === 'todas') {
+      msg = `${quantidade} tarefa(s) encontrada(s) como: todas ${complementacao}`
+    } else {
+      msg = `${quantidade} tarefa(s) encontrada(s) como:"${`${criterio}=${valor}`}" ${complementacao} `
+    }
+    return msg
+  }
+  const tarefas = filtrarTarefas()
+  const mensagem = exibeResultadoDaFiltragem(tarefas.length)
 
   return (
     <S.Container>
-      <p>
-        2 tarefas marcadas como: &quot;categoria&ldquo; e &quot;{termo}&ldquo;
-      </p>
+      <S.Resultado>{mensagem}</S.Resultado>
       <ul>
-        <li>{termo}</li>
-        <li>{criterio}</li>
-        <li>{valor}</li>
-      </ul>
-      <ul>
-        {filtrarTrefas().map((t) => (
+        {tarefas.map((t) => (
           <li key={t.titulo}>
             <Tarefa
               id={t.id}
